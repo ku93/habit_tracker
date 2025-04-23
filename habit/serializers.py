@@ -6,6 +6,7 @@ from .validators import (
 )
 
 class HabitSerializer(serializers.ModelSerializer):
+    ''' Полный сериализатор для привычек с валидацией'''
     class Meta:
         model = Habit
         fields = '__all__'
@@ -20,6 +21,7 @@ class HabitSerializer(serializers.ModelSerializer):
         return data
 
 class PublicHabitSerializer(serializers.ModelSerializer):
+    '''Упрощенный сериализатор для публичных привычек'''
     class Meta:
         model = Habit
         fields = (
