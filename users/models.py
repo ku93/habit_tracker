@@ -18,6 +18,10 @@ class User(AbstractUser):
         help_text="Введите номер телефона",
         region='RU'
     )
+    telegram_chat_id = models.CharField(
+        max_length=20, blank=True, null=True,
+        verbose_name='Telegram ID'
+    )
     city = models.CharField(
         max_length=50,
         blank=True,
