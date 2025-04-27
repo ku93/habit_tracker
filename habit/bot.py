@@ -1,5 +1,6 @@
 import telegram
 from django.conf import settings
+
 from users.models import User
 
 
@@ -8,7 +9,7 @@ def process_telegram_message(update):
     text = update.message.text.strip()
     username = update.message.from_user.username
 
-    if text.startswith('/start'):
+    if text.startswith("/start"):
         parts = text.split()
         if len(parts) == 2:
             try:
