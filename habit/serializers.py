@@ -1,16 +1,17 @@
 from rest_framework import serializers
+
 from .models import Habit
-from .validators import (
-    validate_related_habit, validate_reward_or_related,
-    validate_pleasant_habit, validate_periodicity
-)
+from .validators import (validate_periodicity, validate_pleasant_habit,
+                         validate_related_habit, validate_reward_or_related)
+
 
 class HabitSerializer(serializers.ModelSerializer):
-    ''' Полный сериализатор для привычек с валидацией'''
+    """Полный сериализатор для привычек с валидацией"""
+
     class Meta:
         model = Habit
-        fields = '__all__'
-        read_only_fields = ('user', 'created_at')
+        fields = "__all__"
+        read_only_fields = ("user", "created_at")
 
     def validate(self, data):
         habit = Habit(**data)
@@ -20,11 +21,18 @@ class HabitSerializer(serializers.ModelSerializer):
         validate_periodicity(habit.periodicity)
         return data
 
+
 class PublicHabitSerializer(serializers.ModelSerializer):
-    '''Упрощенный сериализатор для публичных привычек'''
+    """Упрощенный сериализатор для публичных привычек"""
+
     class Meta:
         model = Habit
         fields = (
-            'id', 'place', 'time', 'action',
-            'periodicity', 'duration', 'is_public'
+            "id",
+            "place",
+            "time",
+            "action",
+            "periodicity",
+            "duration",
+            "is_public",
         )
