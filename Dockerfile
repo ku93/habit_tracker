@@ -1,14 +1,15 @@
-FROM python:3.13-slim
+FROM nginx:latest
 
 WORKDIR / app
 
+COPY nginx.conf /etc/nginx/nginx.conf
+COPY html/ /usr/share/nginx/html/
 COPY .env .
 COPY requirements.txt ./
-RUN pip install -r requirements.txt
 COPY . .
+
+
 
 RUN mkdir -p /app/media
 
-EXPOSE 8000
-
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+EXPOSE 80
