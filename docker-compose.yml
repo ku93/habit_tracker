@@ -1,42 +1,37 @@
-version: '3.9'
-
 services:
-  nginx:
-    build: .
-    ports:
-      - '80:80'
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf
-      - ./html:/usr/share/nginx/html
   web:
     build: .
-    command: python manage.py runserver 0.0.0:8000
-    environment:
-      - DEBUG=True
-      - DATABASE_HOST=db
+    command: sh -c "python manage.py collectstatic --noinput && gunicorn habit_tracker.wsgi:application --bind 0.0.0.0:8000"
     volumes:
-      - .:/code
-      - static_volume:/code/static
-    ports:
-      - '8000:8000'
+      - .:/app
+      - static_volume:/app/staticfiles
+    expose:
+      - "8000"
     depends_on:
-      db:
-        condition: service_healthy
-
-
+      - db
+      - redis
+    env_file:
+      - ./.env
+  nginx:
+    build:
+      context: ./nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - static_volume:/app/staticfiles
+    depends_on:
+      - web
   db:
     image: postgres:16
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
     env_file:
       - .env
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U myuser']
-      interval: 30s
-      timeout: 10s
-      retries: 5
-    ports:
-      - '5324:5324'
+    environment:
+      - POSTGRES_DB=${DATABASE_NAME}
+      - POSTGRES_USER=${DATABASE_USER}
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
 
   redis:
     image: redis:7.4.3
@@ -44,19 +39,18 @@ services:
       - .env
     ports:
       - '6379:6379'
-
   celery:
     build: .
     depends_on:
       - redis
-    command: celery -A your_project worker -l info
+    command: celery -A habit_tracker worker -l info
     environment:
       - CELERY_BROKER_URL=redis://redis:6379/0
     env_file:
       - .env
 networks:
   default:
-
 volumes:
   postgres_data:
   static_volume:
+  redis_volume:
