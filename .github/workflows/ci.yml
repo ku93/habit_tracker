@@ -29,7 +29,7 @@ jobs:
         pip install -r requirements.txt
 
     - name: Run migrations
-      run: python manage.py migrate
+      run: poetry run python manage.py migrate
 
     - name: Run tests
       run: poetry run python manage.py test
