@@ -28,7 +28,25 @@ services:
       interval: 30s
       timeout: 10s
       retries: 5
+    ports:
+      - '5324:5324'
 
+  redis:
+    image: redis:7.4.3
+    env_file:
+      - .env
+    ports:
+      - '6379:6379'
+
+  celery:
+    build: .
+    depends_on:
+      - redis
+    command: celery -A your_project worker -l info
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0
+    env_file:
+      - .env
 networks:
   default:
 
