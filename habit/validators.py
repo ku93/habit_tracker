@@ -1,9 +1,11 @@
 from django.core.exceptions import ValidationError
 
+
 def validate_related_habit(value):
     """Проверяет, что связанная привычка является приятной"""
     if value:
         from .models import Habit
+
         if isinstance(value, int):
             try:
                 habit = Habit.objects.get(pk=value)
