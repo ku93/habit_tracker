@@ -1,6 +1,3 @@
-import telegram
-from django.conf import settings
-
 from users.models import User
 
 
