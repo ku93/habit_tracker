@@ -80,8 +80,7 @@ PublicHabitSerializer - упрощенный сериализатор для п�
 ### Начальная настройка
 1. Клонируйте репозиторий:
    ```chatinput
-   git clone https://github.com/ваш-username/habit_tracker.git
-   cd habit_tracker
+   https://github.com/ku93/habit_tracker.git
    ```
 2. Создайте файл .env на основе .env.example
 3. Отредактируйте .env файл, указав свои настройки
